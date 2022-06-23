@@ -1,28 +1,22 @@
 import praw
+from praw.models import MoreComments
 from gtts import gTTS
-
-
-class UserData:
-    subreddit = input("Subreddit?")
-
 
 testBot = praw.Reddit(client_id='k1nwIrUWW716xJZpguPS1Q',
                       client_secret='_UEvS23EyGaIv12OUXXhSzXfLhp2vw',
                       user_agent='<console:MangoBot:0.1>')
-
-subreddit = testBot.subreddit(UserData.subreddit)
-num = 0
+postTitle = ''
+subreddit = testBot.subreddit('AskReddit')
 commentList = []
 for post in subreddit.hot(limit=1):
-
-    print("**********", end='\n')
-    print(post.title)
+    postTitle = post.title
     currentComment = 0
     for comment in post.comments:
-        if currentComment < 100:
-            if len(comment.body) > 20:
-                commentList.append(comment.body)
-                currentComment += 1
+        if isinstance(comment, MoreComments):
+            continue
+        if len(comment.body) > 20:
+            commentList.append(comment.body)
+            currentComment += 1
 
 print(commentList[0])
 
