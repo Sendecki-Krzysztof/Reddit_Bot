@@ -4,16 +4,16 @@ from praw.models import MoreComments
 from gtts import gTTS
 from playwright.sync_api import sync_playwright
 from mutagen.mp3 import MP3
+from moviepy.editor import VideoFileClip, AudioFileClip, ImageClip
 
 testBot = praw.Reddit(client_id='k1nwIrUWW716xJZpguPS1Q',
                       client_secret='_UEvS23EyGaIv12OUXXhSzXfLhp2vw',
                       user_agent='<console:MangoBot:0.1>')
 
 subreddit = testBot.subreddit('AskReddit')
-redditPost = None
+redditPost = 0
 videoLength = 0
 commentList = []
-screenshotList = []
 audioList = []
 
 
@@ -72,19 +72,31 @@ getPost()
 Path("audio").mkdir(parents=True, exist_ok=True)
 Path("images").mkdir(parents=True, exist_ok=True)
 
-print("creating audio and screenshots...")
+print("Creating audio and screenshots...")
 titleMP3 = gTTS(text=redditPost.title, lang='en')
 titleMP3.save('./audio/title.mp3')
+videoLength += MP3('./audio/title.mp3').info.length
 total = 0
 for comment in commentList:
-    if videoLength <= 50:
-        audioList.append(gTTS(text=commentList[total].body, lang='en'))
+    if videoLength <= 45:
+        audio = gTTS(text=commentList[total].body, lang='en')
         screenshot(total, redditPost.id, commentList[total].id)
-        audioFile = './audio/' + str(total) + '.mp3'
-        audioList[total].save(audioFile)
-        videoLength += MP3(audioFile).info.length
+        audioDir = './audio/' + str(total) + '.mp3'
+        audio.save(audioDir)
+        audioList.append(AudioFileClip(audioDir))
+        videoLength += MP3(audioDir).info.length
         print(videoLength)
         total += 1
-print("got audio and screenshots...")
+print("Got audio and screenshots...")
+
+
+print("Creating final Video")
+i = 'title'
+audio = AudioFileClip(f"audio/" + i + ".mp3")
+clip = ImageClip('images/' + i + ".png")
+clip = clip.set_duration(audio.duration)
+clip = clip.set_audio(audio)
+
+clip.write_videofile("testing.mp4", fps=30, audio_codec='aac', audio_bitrate='192k')
 
 print("done!")

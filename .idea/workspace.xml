@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1945c842-cb72-4129-8930-12c50b331d68" name="Changes" comment="Cleaned up the screenshots">
+    <list default="true" id="1945c842-cb72-4129-8930-12c50b331d68" name="Changes" comment="generates audio and screenshots to go with it">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot.py" afterDir="false" />
     </list>
@@ -86,7 +86,7 @@
       <workItem from="1655962939468" duration="48000" />
       <workItem from="1656009155042" duration="615000" />
       <workItem from="1656021861140" duration="117000" />
-      <workItem from="1656022832805" duration="8800000" />
+      <workItem from="1656022832805" duration="11098000" />
     </task>
     <task id="LOCAL-00001" summary="Init">
       <created>1655961209667</created>
@@ -116,7 +116,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656027643715</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="generates audio and screenshots to go with it">
+      <created>1656032635949</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1656032635949</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -138,9 +145,10 @@
     <MESSAGE value="Fixed a bug to do with MoreComments type" />
     <MESSAGE value="Added code to screenshot posts and comments" />
     <MESSAGE value="Cleaned up the screenshots" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up the screenshots" />
+    <MESSAGE value="generates audio and screenshots to go with it" />
+    <option name="LAST_COMMIT_MESSAGE" value="generates audio and screenshots to go with it" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Reddit_Bot$Bot.coverage" NAME="Bot Coverage Results" MODIFIED="1656029703053" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Reddit_Bot$Bot.coverage" NAME="Bot Coverage Results" MODIFIED="1656034643090" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
