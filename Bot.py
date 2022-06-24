@@ -4,15 +4,14 @@ from praw.models import MoreComments
 from gtts import gTTS
 from playwright.sync_api import sync_playwright
 from mutagen.mp3 import MP3
-from moviepy.editor import VideoFileClip, AudioFileClip, ImageClip, concatenate_videoclips, concatenate_audioclips, \
-    CompositeVideoClip, CompositeAudioClip
+from moviepy.editor import *
 
 testBot = praw.Reddit(client_id='k1nwIrUWW716xJZpguPS1Q',
                       client_secret='_UEvS23EyGaIv12OUXXhSzXfLhp2vw',
                       user_agent='<console:MangoBot:0.1>')
 
 subreddit = testBot.subreddit('AskReddit')
-redditPost = 0
+redditPost = None
 videoLength = 0
 commentList = []
 audioList = []
@@ -44,17 +43,13 @@ def screenshot(currentNum, givenPost='', givenComment=''):
 
 # Gets all the comments of a given post and inputs them into the commentsList
 def getComments(post):
-    currentComment = 0
     for comment in post.comments:
-        if currentComment == 0:
-            screenshot(currentComment, post.id, comment.id)
         if isinstance(comment, MoreComments):
             continue
         if comment.body in ["[removed]", "[deleted]"]:
             continue
         if len(comment.body) > 20:
             commentList.append(comment)
-            currentComment += 1
 
 
 # Processes the Posts
@@ -67,8 +62,6 @@ def getPost():
         # screenshots the title of post
         screenshot(-1, post.id)
         getComments(post)
-
-    print("Got reddit Posts...")
 
 
 getPost()
@@ -84,47 +77,41 @@ audioList.append(titleAudio)
 videoLength += MP3('./audio/title.mp3').info.length
 total = 0
 for comment in commentList:
-    if videoLength <= 45:
+    if videoLength <= 600:
         audio = gTTS(text=commentList[total].body, lang='en')
         screenshot(total, redditPost.id, commentList[total].id)
         audioDir = './audio/' + str(total) + '.mp3'
         audio.save(audioDir)
         audioList.append(AudioFileClip(audioDir))
         videoLength += MP3(audioDir).info.length
-        print(videoLength)
         total += 1
-print("Got audio and screenshots...")
+print(videoLength)
 
 print("Creating final Video")
 titleAudio = AudioFileClip(f"audio/title.mp3")
-titleClip = (ImageClip("images/title.png")
-             .set_duration(titleAudio.duration)
-             .set_audio(titleAudio)
-             .set_position('center')
-             .resize(width=W - 100)
-             )
-clipList.append(titleClip)
+clipList.append(
+    ImageClip("images/title.png")
+        .set_duration(titleAudio.duration)
+        .set_audio(titleAudio)
+        .set_position('center')
+)
 
 for i in range(0, total):
-    clipList.insert(
-        0,
+    print(i)
+    clipList.append(
         ImageClip('images/' + str(i) + ".png")
-        .set_duration(audioList[i].duration)
-        .set_audio(audioList[i])
-        .set_position('center')
-        .resize(width=W - 100)
+            .set_duration(audioList[i + 1].duration)
+            .set_audio(audioList[i + 1])
+            .set_position('center')
     )
-
 imageConcat = concatenate_videoclips(clipList).set_position(("center", "center"))
 audioComposite = CompositeAudioClip([concatenate_audioclips(audioList)])
 
-imageConcat.audio = audioComposite
+imageConcat.resize(width=W, height=H)
+background = ImageClip("Background.png").set_position("center")
 
-background = ImageClip("Background.jpg")
 final = CompositeVideoClip([background, imageConcat])
 final = final.set_duration(audioComposite.duration)
-final = final.resize(width= W)
-
-final.write_videofile("video.mp4", fps=30, audio_codec='aac', audio_bitrate='192k')
+final.write_videofile(str(redditPost.title) + ".mp4", fps=30, audio_codec='aac', audio_bitrate='192k')
 
 print("done!")
