@@ -4,7 +4,8 @@ from praw.models import MoreComments
 from gtts import gTTS
 from playwright.sync_api import sync_playwright
 from mutagen.mp3 import MP3
-from moviepy.editor import VideoFileClip, AudioFileClip, ImageClip
+from moviepy.editor import VideoFileClip, AudioFileClip, ImageClip, concatenate_videoclips, concatenate_audioclips, \
+    CompositeVideoClip, CompositeAudioClip
 
 testBot = praw.Reddit(client_id='k1nwIrUWW716xJZpguPS1Q',
                       client_secret='_UEvS23EyGaIv12OUXXhSzXfLhp2vw',
@@ -15,6 +16,9 @@ redditPost = 0
 videoLength = 0
 commentList = []
 audioList = []
+clipList = []
+H = 1080
+W = 1920
 
 
 # Takes a screenshot of the current site element,
@@ -75,6 +79,8 @@ Path("images").mkdir(parents=True, exist_ok=True)
 print("Creating audio and screenshots...")
 titleMP3 = gTTS(text=redditPost.title, lang='en')
 titleMP3.save('./audio/title.mp3')
+titleAudio = AudioFileClip(f"audio/title.mp3")
+audioList.append(titleAudio)
 videoLength += MP3('./audio/title.mp3').info.length
 total = 0
 for comment in commentList:
@@ -89,14 +95,36 @@ for comment in commentList:
         total += 1
 print("Got audio and screenshots...")
 
-
 print("Creating final Video")
-i = 'title'
-audio = AudioFileClip(f"audio/" + i + ".mp3")
-clip = ImageClip('images/' + i + ".png")
-clip = clip.set_duration(audio.duration)
-clip = clip.set_audio(audio)
+titleAudio = AudioFileClip(f"audio/title.mp3")
+titleClip = (ImageClip("images/title.png")
+             .set_duration(titleAudio.duration)
+             .set_audio(titleAudio)
+             .set_position('center')
+             .resize(width=W - 100)
+             )
+clipList.append(titleClip)
 
-clip.write_videofile("testing.mp4", fps=30, audio_codec='aac', audio_bitrate='192k')
+for i in range(0, total):
+    clipList.insert(
+        0,
+        ImageClip('images/' + str(i) + ".png")
+        .set_duration(audioList[i].duration)
+        .set_audio(audioList[i])
+        .set_position('center')
+        .resize(width=W - 100)
+    )
+
+imageConcat = concatenate_videoclips(clipList).set_position(("center", "center"))
+audioComposite = CompositeAudioClip([concatenate_audioclips(audioList)])
+
+imageConcat.audio = audioComposite
+
+background = ImageClip("Background.jpg")
+final = CompositeVideoClip([background, imageConcat])
+final = final.set_duration(audioComposite.duration)
+final = final.resize(width= W)
+
+final.write_videofile("video.mp4", fps=30, audio_codec='aac', audio_bitrate='192k')
 
 print("done!")
