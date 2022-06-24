@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1945c842-cb72-4129-8930-12c50b331d68" name="Changes" comment="Added code to screenshot posts and comments">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+    <list default="true" id="1945c842-cb72-4129-8930-12c50b331d68" name="Changes" comment="Cleaned up the screenshots">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot.py" afterDir="false" />
     </list>
@@ -87,7 +86,7 @@
       <workItem from="1655962939468" duration="48000" />
       <workItem from="1656009155042" duration="615000" />
       <workItem from="1656021861140" duration="117000" />
-      <workItem from="1656022832805" duration="4725000" />
+      <workItem from="1656022832805" duration="8800000" />
     </task>
     <task id="LOCAL-00001" summary="Init">
       <created>1655961209667</created>
@@ -110,7 +109,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656024755474</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Cleaned up the screenshots">
+      <created>1656027643715</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1656027643715</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -131,9 +137,10 @@
     <MESSAGE value="Init" />
     <MESSAGE value="Fixed a bug to do with MoreComments type" />
     <MESSAGE value="Added code to screenshot posts and comments" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added code to screenshot posts and comments" />
+    <MESSAGE value="Cleaned up the screenshots" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up the screenshots" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Reddit_Bot$Bot.coverage" NAME="Bot Coverage Results" MODIFIED="1656027512935" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Reddit_Bot$Bot.coverage" NAME="Bot Coverage Results" MODIFIED="1656029703053" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
