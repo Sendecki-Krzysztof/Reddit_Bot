@@ -28,12 +28,13 @@ def CheckDirectories():
 # screenshot of the Post title input -1 here.
 def screenshot(index, givenPost='', givenComment=''):
     with sync_playwright() as p:
-        browser = p.firefox.launch()
+        browser = p.firefox.launch(headless=False)
         page = browser.new_page()
         page.set_viewport_size({'width': 1920, 'height': 1080})
         page.goto("https://www.reddit.com/" + givenPost)
         url = page.url
         page.goto(url + givenComment)
+        page.wait_for_timeout(1000)
         if not index == -1:
             image = str(index) + '.png'
             page.locator(f"#t1_{givenComment}").screenshot(path='./images/' + image)
@@ -97,7 +98,6 @@ if __name__ == "__main__":
     titleMP3.save('./audio/title.mp3')
     createClip("title", titleMP3)
     videoLength = audioList[0].duration
-
     clipNum = 1
     for comment in postComments:
         if videoLength < 45:
