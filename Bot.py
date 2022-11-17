@@ -87,6 +87,17 @@ def createClip(name, audio):
     audioList.append(tAudio)
 
 
+def createFinalVideo(width, height, post):
+    imageConcat = concatenate_videoclips(clipList).set_position(("center", "center"))
+    audioComposite = CompositeAudioClip([concatenate_audioclips(audioList)])
+    imageConcat.resize(width=width, height=height)
+    background = ImageClip("Background.png").set_position("center")
+
+    final = CompositeVideoClip([background, imageConcat])
+    final = final.set_duration(audioComposite.duration)
+    final.write_videofile("time.mp4", fps=24)
+
+
 if __name__ == "__main__":
     print("Getting Reddit Post...")
     redditPost, postComments = getPost()  # Get the reddit post and the comments of that post
@@ -112,11 +123,5 @@ if __name__ == "__main__":
     print("video length will be:", videoLength)
 
     print("Finalizing Video...")
-    imageConcat = concatenate_videoclips(clipList).set_position(("center", "center"))
-    audioComposite = CompositeAudioClip([concatenate_audioclips(audioList)])
-    imageConcat.resize(width=W, height=H)
-    background = ImageClip("Background.png").set_position("center")
+    createFinalVideo(W, H, redditPost)  # Creates the final video
 
-    final = CompositeVideoClip([background, imageConcat])
-    final = final.set_duration(audioComposite.duration)
-    final.write_videofile("title.mp4", fps=24)
