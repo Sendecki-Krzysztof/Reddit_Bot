@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1945c842-cb72-4129-8930-12c50b331d68" name="Changes" comment="Creates final video, still unplayable">
-      <change afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
+    <list default="true" id="1945c842-cb72-4129-8930-12c50b331d68" name="Changes" comment="Complete Revamp. GUI Update">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Video1.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/title.mp4" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +120,7 @@
       <workItem from="1668617060979" duration="1648000" />
       <workItem from="1668670241575" duration="959000" />
       <workItem from="1668748774610" duration="1685000" />
-      <workItem from="1668811419948" duration="22386000" />
+      <workItem from="1668811419948" duration="22632000" />
     </task>
     <task id="LOCAL-00001" summary="Init">
       <created>1655961209667</created>
@@ -175,7 +171,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656038815139</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Complete Revamp. GUI Update">
+      <created>1668834959429</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1668834959430</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -200,7 +203,8 @@
     <MESSAGE value="generates audio and screenshots to go with it" />
     <MESSAGE value="generates short title video" />
     <MESSAGE value="Creates final video, still unplayable" />
-    <option name="LAST_COMMIT_MESSAGE" value="Creates final video, still unplayable" />
+    <MESSAGE value="Complete Revamp. GUI Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Complete Revamp. GUI Update" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Reddit_Bot$Bot.coverage" NAME="Bot Coverage Results" MODIFIED="1668750373493" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
