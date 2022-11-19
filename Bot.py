@@ -1,127 +1,176 @@
+from os.path import isfile
 from pathlib import Path
-import praw
 from praw.models import MoreComments
 from gtts import gTTS
 from playwright.sync_api import sync_playwright
 from moviepy.editor import *
+import praw
+import json
 
-testBot = praw.Reddit(client_id='k1nwIrUWW716xJZpguPS1Q',
-                      client_secret='_UEvS23EyGaIv12OUXXhSzXfLhp2vw',
-                      user_agent='<console:MangoBot:0.1>')
 
-subreddit = testBot.subreddit('AskReddit')
-audioList = []
-clipList = []
-H = 1080
-W = 1920
+def login(page):
+    print("Logging into Reddit Account...", end="")
+    if isfile("AccountDetails.json"):
+        with open('AccountDetails.json', 'r') as openfile:
+            accountDetails = json.load(openfile)
+        page.goto("https://www.reddit.com/")
+        page.locator('role=button[name="Log In"]').click()
+        page.frame_locator("#SHORTCUT_FOCUSABLE_DIV iframe").get_by_placeholder("\n        Username\n      ").fill(
+            accountDetails["username"])
+        page.frame_locator("#SHORTCUT_FOCUSABLE_DIV iframe").get_by_placeholder("\n        Password\n      ").click()
+        page.frame_locator("#SHORTCUT_FOCUSABLE_DIV iframe").get_by_placeholder("\n        Password\n      ").fill(
+            accountDetails["password"])
+        page.frame_locator("#SHORTCUT_FOCUSABLE_DIV iframe").get_by_placeholder("\n        Password\n      ").press(
+            "Enter")
+        page.wait_for_url("https://www.reddit.com/")
+        page.get_by_role("button", name="Close").click()
+        page.get_by_role("link", name="User avatar").click()
+        print("Success!")
+    else:
+        print("Failed!")
+
+
+# Takes in a list of comments to screenshot and the post to screenshot from, outputs them all into the images' folder.
+def screenshot(post, toScreenshot):
+    with sync_playwright() as p:
+        print("Taking Screenshot...")
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context()
+        page = context.new_page()
+        page.set_viewport_size({'width': 1920, 'height': 1080})
+
+        login(page)
+
+        page.goto("https://www.reddit.com/" + str(post.id))
+
+        url = page.url
+        for i in range(0, len(toScreenshot)):
+            print("Taking Screenshot ", i, "...", end="")
+            page.goto(url + toScreenshot[i].id)
+            if i == 0:
+                page.locator('[data-test-id="post-content"]').screenshot(path='images/0.png')
+                page.goto(url + toScreenshot[i].id)
+                page.locator('[data-test-id="post-content"]').screenshot(path='images/0.png')
+            else:
+                page.locator(f"#t1_{toScreenshot[i].id}").screenshot(path='./images/' + str(i) + '.png')
+            print("Done!")
+
+        context.close()
+        browser.close()
 
 
 # Checks if the directories of audio and images exist. if they don't then create them.
 def CheckDirectories():
+    print("Checking Directories...", end="")
     Path("audio").mkdir(parents=True, exist_ok=True)
+    print("audio...", end="")
+
     Path("images").mkdir(parents=True, exist_ok=True)
+    print("images...Done!", end="")
+    print()
 
 
-# Takes a screenshot of the current site element,
-# givenPost is the reddit Post id and givenComment is the reddit Comment id.
-# currentNum is the resulting file name, if you wish to take a
-# screenshot of the Post title input -1 here.
-def screenshot(index, givenPost='', givenComment=''):
-    with sync_playwright() as p:
-        browser = p.firefox.launch(headless=False)
-        page = browser.new_page()
-        page.set_viewport_size({'width': 1920, 'height': 1080})
-        page.goto("https://www.reddit.com/" + givenPost)
-        url = page.url
-        page.goto(url + givenComment)
-        page.wait_for_timeout(1000)
-        if not index == -1:
-            image = str(index) + '.png'
-            page.locator(f"#t1_{givenComment}").screenshot(path='./images/' + image)
-        else:
-            page.locator('[data-test-id="post-content"]').screenshot(path='images/title.png')
+# Uses the BotDetails.json file to create a bot using the praw wrapper. Returns the created reddit bot object
+def createBot():
+    print("Creating Bot...", end="")
+    with open('BotDetails.json', 'r') as openfile:
+        botDetails = json.load(openfile)
 
-        browser.close()
+    bot = praw.Reddit(client_id=botDetails['client_id'],
+                      client_secret=botDetails['client_secret'],
+                      user_agent=botDetails['user_agent'])
+    print("Done!")
+    return bot
 
 
-# Gets all the comments of a given post and inputs them into the commentsList
-def getComments(post):
-    commentList = []
+# Takes the User defined subreddit and returns the first post within it. (when searching by hot)
+def getPost(subreddit):
+    print("Getting Post...", end="")
+    for post in subreddit.hot(limit=1):
+        return post
+
+
+# Takes in a post and an empty list to be filled with comment ids. It also takes the optional value minWordCount,
+# This will make sure all posts have at least that many characters
+def getComments(post, commentList, minWordCount=20):
+    print("Comments...", end="")
     for comment in post.comments:
         if isinstance(comment, MoreComments):
             continue
         if comment.body in ["[removed]", "[deleted]"]:
             continue
-        if len(comment.body) > 20:
+        if len(comment.body) > minWordCount:
             commentList.append(comment)
-    return commentList
+
+    print("Done!")
 
 
-# Processes the post first post in "hot" of the given subreddit also puts all the posts
-def getPost():
-    post = None
-    comments = None
-    for post in subreddit.hot(limit=1):
-        post = post
-
-        # screenshots the title of post
-        screenshot(-1, post.id)
-        comments = getComments(post)
-    return post, comments
-
-
-# Takes a string input name and an GTTS audio file as audio to create a MoviePy Clip
-# Adds both to there respective list
-def createClip(name, audio):
-    print("Creating " + name + ": Clip...", end="")
-    print("Audio...", end="")
-    tAudio = AudioFileClip("./audio/" + name + ".mp3")
-
-    print("ImageClip...", end="")
-    tClip = ImageClip("images/" + name + ".png")
-    tClip.duration = tAudio.duration
-    tClip.audio = tAudio
-    tClip.pos = 'center'
-    print("Done")
-    clipList.append(tClip)
-    audioList.append(tAudio)
+# Finds the Comments to add to the video and then appends them to the screenshot list. It also creates the audio
+# files that will be needed for the video finalization. Breaks when the video length is greater than the desired length
+def getVideoClips(screenshotsToTake, audioList, finalVideoLength, comments):
+    print("Finding Video Clips...")
+    titleMP3 = gTTS(text=screenshotsToTake[0].title, lang='en')
+    titleMP3.save('./audio/0.mp3')
+    audioList.append(AudioFileClip("./audio/0.mp3"))
+    currentLength = audioList[0].duration
+    includedClips = 1
+    for comment in comments:
+        if currentLength < finalVideoLength:
+            print("Finding Clip ", includedClips, "...", end="")
+            MP3 = gTTS(text=comment.body, lang='en')
+            MP3.save('./audio/' + str(includedClips) + '.mp3')
+            audioList.append(AudioFileClip('./audio/' + str(includedClips) + '.mp3'))
+            MP3duration = audioList[includedClips].duration
+            screenshotsToTake.append(comment)
+            currentLength += MP3duration
+            includedClips += 1
+            print("Done!")
+        else:
+            print("Final video will be", currentLength, "seconds Long and have", includedClips - 1, "Clips!")
+            break
 
 
-def createFinalVideo(width, height, post):
-    imageConcat = concatenate_videoclips(clipList).set_position(("center", "center"))
-    audioComposite = CompositeAudioClip([concatenate_audioclips(audioList)])
+def generateClips(clips, audioList):
+    for i in range(0, len(audioList)):
+        print("Creating " + str(i) + ": Clip...", end="")
+        clip = ImageClip("images/" + str(i) + ".png")
+        clip.duration = audioList[i].duration
+        clip.audio = audioList[i]
+        clip.pos = 'center'
+        clips.append(clip)
+        print("Done!")
+
+
+def createFinalVideo(clips, sounds, name, height=1080, width=1920):
+    imageConcat = concatenate_videoclips(clips).set_position(("center", "center"))
+    audioComposite = CompositeAudioClip([concatenate_audioclips(sounds)])
     imageConcat.resize(width=width, height=height)
     background = ImageClip("Background.png").set_position("center")
 
     final = CompositeVideoClip([background, imageConcat])
     final = final.set_duration(audioComposite.duration)
-    final.write_videofile("time.mp4", fps=24)
+    final.write_videofile(name, fps=24)
 
 
-if __name__ == "__main__":
-    print("Getting Reddit Post...")
-    redditPost, postComments = getPost()  # Get the reddit post and the comments of that post
+def createVideo(finalVideoLength, chosenSubreddit):
+    screenshotsToTake = []
+    audioList = []
+    clips = []
+    comments = []
+
     CheckDirectories()
+    bot = createBot()
 
-    print("Creating audio and screenshots...")
+    subreddit = bot.subreddit(chosenSubreddit)
 
-    titleMP3 = gTTS(text=redditPost.title, lang='en')
-    titleMP3.save('./audio/title.mp3')
-    createClip("title", titleMP3)
-    videoLength = audioList[0].duration
-    clipNum = 1
-    for comment in postComments:
-        if videoLength < 45:
-            commentAudio = gTTS(text=comment.body, lang='en')
-            commentAudio.save('./audio/' + str(clipNum) + '.mp3')
-            screenshot(clipNum, redditPost.id, comment.id)
-            createClip(str(clipNum), commentAudio)
-            videoLength += audioList[clipNum].duration
-            clipNum += 1
-        else:
-            break
-    print("video length will be:", videoLength)
+    post = getPost(subreddit)
+    getComments(post, comments)
 
-    print("Finalizing Video...")
-    createFinalVideo(W, H, redditPost)  # Creates the final video
+    screenshotsToTake.append(post)
+    getVideoClips(screenshotsToTake, audioList, finalVideoLength, comments)
 
+    screenshot(post, screenshotsToTake)
+
+    generateClips(clips, audioList)
+
+    createFinalVideo(clips, audioList, "Video.mp4")

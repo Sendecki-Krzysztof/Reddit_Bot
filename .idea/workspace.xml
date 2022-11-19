@@ -5,24 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1945c842-cb72-4129-8930-12c50b331d68" name="Changes" comment="Creates final video, still unplayable">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/Bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Reddit_Bot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Reddit_Bot.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/audio/1.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio/1.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/audio/2.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio/2.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/audio/3.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio/3.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/audio/4.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio/4.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/audio/5.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/audio/5.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/audio/6.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/6.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/title.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/title.mp4" beforeDir="false" afterPath="$PROJECT_DIR$/title.mp4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Video1.mp4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/title.mp4" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,11 +51,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\theki\Desktop\Coding\Reddit_Bot\images" />
       <recent name="C:\Users\theki\Desktop\Coding\Reddit_Bot" />
+      <recent name="C:\Users\theki\Desktop\Coding\Reddit_Bot\images" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.GUI">
     <configuration name="Bot" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Reddit_Bot" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -81,7 +69,29 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Bot.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\theki\Desktop\Coding\Reddit_Bot\Bot.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="GUI" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Reddit_Bot" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GUI.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -92,7 +102,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Bot" />
+        <item itemvalue="Python.GUI" />
       </list>
     </recent_temporary>
   </component>
@@ -112,6 +122,9 @@
       <workItem from="1656042387299" duration="4848000" />
       <workItem from="1668559316924" duration="18439000" />
       <workItem from="1668617060979" duration="1648000" />
+      <workItem from="1668670241575" duration="959000" />
+      <workItem from="1668748774610" duration="1685000" />
+      <workItem from="1668811419948" duration="22386000" />
     </task>
     <task id="LOCAL-00001" summary="Init">
       <created>1655961209667</created>
@@ -190,6 +203,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="Creates final video, still unplayable" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Reddit_Bot$Bot.coverage" NAME="Bot Coverage Results" MODIFIED="1668618647846" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Reddit_Bot$Bot.coverage" NAME="Bot Coverage Results" MODIFIED="1668750373493" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Reddit_Bot$GUI.coverage" NAME="GUI Coverage Results" MODIFIED="1668833382131" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
