@@ -84,16 +84,21 @@ def createBot():
 
 
 # Takes the User defined subreddit and returns the first post within it. (when searching by hot)
-def getPost(subreddit):
+def getPost(subreddit, videoNum=1):
     print("Getting Post...", end="")
-    for post in subreddit.hot(limit=1):
-        return post
+    currentPost = 0;
+    for post in subreddit.hot():
+        print(currentPost, videoNum)
+        if currentPost == videoNum:
+            return post
+        currentPost += 1
 
 
 # Takes in a post and an empty list to be filled with comment ids. It also takes the optional value minWordCount,
 # This will make sure all posts have at least that many characters
-def getComments(post, commentList, minWordCount=20):
+def getComments(post, commentList, sortOrder="best", minWordCount=20):
     print("Comments...", end="")
+    post.comment_sort = sortOrder
     for comment in post.comments:
         if isinstance(comment, MoreComments):
             continue
@@ -152,25 +157,32 @@ def createFinalVideo(clips, sounds, name, height=1080, width=1920):
     final.write_videofile(name, fps=24)
 
 
-def createVideo(finalVideoLength, chosenSubreddit):
-    screenshotsToTake = []
-    audioList = []
-    clips = []
-    comments = []
-
+def createVideo(finalVideoLength, chosenSubreddit, videoNum, sortOrder):
     CheckDirectories()
     bot = createBot()
-
+    print(chosenSubreddit)
     subreddit = bot.subreddit(chosenSubreddit)
 
-    post = getPost(subreddit)
-    getComments(post, comments)
+    for i in range(0, videoNum):
+        print("in Loop")
+        screenshotsToTake = []
+        audioList = []
+        clips = []
+        comments = []
 
-    screenshotsToTake.append(post)
-    getVideoClips(screenshotsToTake, audioList, finalVideoLength, comments)
+        post = getPost(subreddit, i)
+        print(post.id)
+        getComments(post, comments, sortOrder)
 
-    screenshot(post, screenshotsToTake)
+        screenshotsToTake.append(post)
+        getVideoClips(screenshotsToTake, audioList, finalVideoLength, comments)
 
-    generateClips(clips, audioList)
+        screenshot(post, screenshotsToTake)
 
-    createFinalVideo(clips, audioList, "Video.mp4")
+        generateClips(clips, audioList)
+        name = "Video" + str(i) + ".mp4"
+        createFinalVideo(clips, audioList, name)
+        print(name, "has been created!")
+
+    print("All Videos Made!!!")
+

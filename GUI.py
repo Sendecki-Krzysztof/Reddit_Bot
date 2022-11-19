@@ -81,8 +81,27 @@ def checkStatus(filename, key):
 MainMenu = [
     [sg.Text('Bot Status:', key="Bot"), sg.Button("Create Bot json")],
     [sg.Text('Account Status:', key="Account"), sg.Button("Create Account json")],
+    [sg.Text('Video Length (in seconds):'), sg.InputText(size=(15, 1))],
+    [sg.Text('Video Subreddit:'), sg.InputText(size=(15, 1))],
+    [sg.Text('Number of Videos:'), sg.InputText(size=(15, 1))],
     [sg.Button("Close"), sg.Button("Create Video")]
 ]
+
+def handleVideoCreation(values):
+    videoLength = 45
+    subreddit = "AskReddit"
+    videoNumber = 1
+    print(values[0], values[1], values[2])
+    if not values[0] == '':
+        videoLength = int(values[0])
+    if not values[1] == '':
+        subreddit = str(values[1])
+    if not values[2] == '':
+        videoNumber = int(values[2])
+
+    Bot.createVideo(videoLength, subreddit, videoNumber, "best" )
+
+
 
 mainMenu = sg.Window('Reddit Video Maker', MainMenu, finalize=True)
 
@@ -91,6 +110,8 @@ checkStatus("AccountDetails.json", "Account")
 
 event, values = mainMenu.read()
 while appOpen:
+
+
     if event == "Create Bot json":
         makeBotJson()
         checkStatus("BotDetails.json", 'Bot')
@@ -98,7 +119,8 @@ while appOpen:
         makeAccountJson()
         checkStatus("AccountDetails.json", "Account")
     elif event == "Create Video":
-        Bot.createVideo(45, "AskReddit")
+        handleVideoCreation(values)
+
     elif event == "Close" or event == sg.WIN_CLOSED:
         print("Closing...")
         mainMenu.close()
