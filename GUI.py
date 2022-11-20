@@ -83,9 +83,9 @@ def checkStatus(filename, key):
 MainMenu = [
     [sg.Text('Bot Status:', key="Bot"), sg.Button("Create Bot json")],
     [sg.Text('Account Status:', key="Account"), sg.Button("Create Account json")],
-    [sg.Text('Video Length (in seconds):'), sg.InputText(size=(15, 1))],
-    [sg.Text('Video Subreddit:'), sg.InputText(size=(15, 1))],
-    [sg.Text('Number of Videos:'), sg.InputText(size=(15, 1))],
+    [sg.Text('Video Length (in seconds):'), sg.InputText(size=(15, 1)), sg.Text('default: 45s')],
+    [sg.Text('Video Subreddit:'), sg.InputText(size=(15, 1)), sg.Text('default: "AskReddit"')],
+    [sg.Text('Number of Videos:'), sg.InputText(size=(15, 1)), sg.Text('default: 1')],
     [sg.Text('Sorting Comments:'),
      sg.Radio("Best", "sortComments", default=True, key='best'),
      sg.Radio("Top", "sortComments", key='top'),

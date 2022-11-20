@@ -146,6 +146,12 @@ def getVideoClips(screenshotsToTake, audioList, finalVideoLength, comments):
             includedClips += 1
             print("Done!")
         else:
+            if currentLength > finalVideoLength:  # if the video is over final length remove the last clip.
+                lastAudio = audioList.pop()
+                lastScreenshot = screenshotsToTake.pop()
+                currentLength = currentLength - lastAudio.duration
+                includedClips = includedClips - 1
+
             print("Final video will be", currentLength, "seconds Long and have", includedClips - 1, "Clips!")
             break
 
@@ -169,13 +175,12 @@ def createFinalVideo(clips, sounds, name, height=1080, width=1920):
 
     final = CompositeVideoClip([background, imageConcat])
     final = final.set_duration(audioComposite.duration)
-    final.write_videofile(name, fps=24)
+    final.write_videofile(name, fps=30)
 
 
 def createVideo(finalVideoLength, chosenSubreddit, videoNum, commentSortOrder, subredditSortOrder):
     CheckDirectories()
     bot = createBot()
-    print(chosenSubreddit)
     subreddit = bot.subreddit(chosenSubreddit)
 
     for i in range(0, videoNum):
@@ -186,7 +191,6 @@ def createVideo(finalVideoLength, chosenSubreddit, videoNum, commentSortOrder, s
         comments = []
 
         post = getPost(subreddit, subredditSortOrder, i)
-        print(post.id)
         getComments(post, comments, commentSortOrder)
 
         screenshotsToTake.append(post)
