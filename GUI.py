@@ -16,6 +16,8 @@ def jsonAccountLayout():
         [sg.Button("Create"), sg.Cancel()]
     ]
     return redditAccountCreate
+
+
 # Handles the json Creation window
 def makeAccountJson():
     redditAccount = {
@@ -84,13 +86,28 @@ MainMenu = [
     [sg.Text('Video Length (in seconds):'), sg.InputText(size=(15, 1))],
     [sg.Text('Video Subreddit:'), sg.InputText(size=(15, 1))],
     [sg.Text('Number of Videos:'), sg.InputText(size=(15, 1))],
+    [sg.Text('Sorting Comments:'),
+     sg.Radio("Best", "sortComments", default=True, key='best'),
+     sg.Radio("Top", "sortComments", key='top'),
+     sg.Radio("New", "sortComments", key='new'),
+     sg.Radio("Hot", "sortComments", key='hot'),
+     sg.Radio("Controversial", "sortComments", key='controversial')],
+    [sg.Text('Sorting Subreddit Posts:'),
+     sg.Radio("Rising", "sortPost", key='Rising'),
+     sg.Radio("Top", "sortPost", key='Top'),
+     sg.Radio("New", "sortPost", key='New'),
+     sg.Radio("Hot", "sortPost", default=True, key='Hot'),
+     sg.Radio("Controversial", "sortPost", key='Controversial')],
     [sg.Button("Close"), sg.Button("Create Video")]
 ]
+
 
 def handleVideoCreation(values):
     videoLength = 45
     subreddit = "AskReddit"
     videoNumber = 1
+    commentSort = "best"
+    subredditSort = "top"
     print(values[0], values[1], values[2])
     if not values[0] == '':
         videoLength = int(values[0])
@@ -99,8 +116,19 @@ def handleVideoCreation(values):
     if not values[2] == '':
         videoNumber = int(values[2])
 
-    Bot.createVideo(videoLength, subreddit, videoNumber, "best" )
+    # Decide which value to sort by.
+    commentSortFound = False
+    subSortFound = False
+    for value in values:
+        if values[value] and not commentSortFound:
+            commentSort = str(value).lower()
+            commentSortFound = True
+        elif values[value] and not subSortFound:
+            subredditSort = str(value).lower()
+            commentSortFound = True
 
+
+    Bot.createVideo(videoLength, subreddit, videoNumber, commentSort, subredditSort)
 
 
 mainMenu = sg.Window('Reddit Video Maker', MainMenu, finalize=True)
@@ -110,7 +138,6 @@ checkStatus("AccountDetails.json", "Account")
 
 event, values = mainMenu.read()
 while appOpen:
-
 
     if event == "Create Bot json":
         makeBotJson()
@@ -127,4 +154,4 @@ while appOpen:
         appOpen = False
     event, values = mainMenu.read()
 
-print("Got out")
+print("Application Closed")

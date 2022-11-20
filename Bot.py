@@ -83,22 +83,37 @@ def createBot():
     return bot
 
 
-# Takes the User defined subreddit and returns the first post within it. (when searching by hot)
-def getPost(subreddit, videoNum=1):
+# Returns the sort order of the subreddit posts based on what the user requested in the GUI.
+def sortPosts(subreddit, subredditSort):
+    if subredditSort == "hot":
+        return subreddit.hot()
+    elif subredditSort == "controversial":
+        return subreddit.controversial()
+    elif subredditSort == "new":
+        return subreddit.new()
+    elif subredditSort == "top":
+        return subreddit.top()
+    elif subredditSort == "rising":
+        return subreddit.rising()
+
+
+# Takes the User defined subreddit and a sort order, calls sortPosts to sort the posts in the requested sort order and
+# then returns the post defined by VideoNumToFind value (if VideoNumToFind=1, then returns the first post ect.)
+def getPost(subreddit, subredditSort, VideoNumToFind=1):
     print("Getting Post...", end="")
-    currentPost = 0;
-    for post in subreddit.hot():
-        print(currentPost, videoNum)
-        if currentPost == videoNum:
+    currentPost = 0
+    for post in sortPosts(subreddit, subredditSort):
+        print(currentPost, VideoNumToFind)
+        if currentPost == VideoNumToFind:
             return post
         currentPost += 1
 
 
-# Takes in a post and an empty list to be filled with comment ids. It also takes the optional value minWordCount,
-# This will make sure all posts have at least that many characters
+# Takes a post object and an empty commentList to fill with comments. Add comments to this list if they
+# are greater than the minWordCount
 def getComments(post, commentList, sortOrder="best", minWordCount=20):
     print("Comments...", end="")
-    post.comment_sort = sortOrder
+    post.comment_sort = sortOrder  # Sort the comments based on the User's requested sort order
     for comment in post.comments:
         if isinstance(comment, MoreComments):
             continue
@@ -157,7 +172,7 @@ def createFinalVideo(clips, sounds, name, height=1080, width=1920):
     final.write_videofile(name, fps=24)
 
 
-def createVideo(finalVideoLength, chosenSubreddit, videoNum, sortOrder):
+def createVideo(finalVideoLength, chosenSubreddit, videoNum, commentSortOrder, subredditSortOrder):
     CheckDirectories()
     bot = createBot()
     print(chosenSubreddit)
@@ -170,9 +185,9 @@ def createVideo(finalVideoLength, chosenSubreddit, videoNum, sortOrder):
         clips = []
         comments = []
 
-        post = getPost(subreddit, i)
+        post = getPost(subreddit, subredditSortOrder, i)
         print(post.id)
-        getComments(post, comments, sortOrder)
+        getComments(post, comments, commentSortOrder)
 
         screenshotsToTake.append(post)
         getVideoClips(screenshotsToTake, audioList, finalVideoLength, comments)
@@ -185,4 +200,3 @@ def createVideo(finalVideoLength, chosenSubreddit, videoNum, sortOrder):
         print(name, "has been created!")
 
     print("All Videos Made!!!")
-
