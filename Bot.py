@@ -146,14 +146,16 @@ def getVideoClips(screenshotsToTake, audioList, finalVideoLength, comments):
             includedClips += 1
             print("Done!")
         else:
+            print(currentLength)
             if currentLength > finalVideoLength:  # if the video is over final length remove the last clip.
+
                 lastAudio = audioList.pop()
                 lastScreenshot = screenshotsToTake.pop()
                 currentLength = currentLength - lastAudio.duration
                 includedClips = includedClips - 1
 
-            print("Final video will be", currentLength, "seconds Long and have", includedClips - 1, "Clips!")
-            break
+        print("Final video will be", currentLength, "seconds Long and have", includedClips - 1, "Clips!")
+        break
 
 
 def generateClips(clips, audioList):
