@@ -8,23 +8,27 @@ import praw
 import json
 
 
-def login(page):
+def login(page, context):
     print("Logging into Reddit Account...", end="")
     if isfile("AccountDetails.json"):
         with open('AccountDetails.json', 'r') as openfile:
             accountDetails = json.load(openfile)
-        page.goto("https://www.reddit.com/")
-        page.locator('role=button[name="Log In"]').click()
-        page.frame_locator("#SHORTCUT_FOCUSABLE_DIV iframe").get_by_placeholder("\n        Username\n      ").fill(
-            accountDetails["username"])
-        page.frame_locator("#SHORTCUT_FOCUSABLE_DIV iframe").get_by_placeholder("\n        Password\n      ").click()
-        page.frame_locator("#SHORTCUT_FOCUSABLE_DIV iframe").get_by_placeholder("\n        Password\n      ").fill(
-            accountDetails["password"])
-        page.frame_locator("#SHORTCUT_FOCUSABLE_DIV iframe").get_by_placeholder("\n        Password\n      ").press(
-            "Enter")
-        page.wait_for_url("https://www.reddit.com/")
-        page.get_by_role("button", name="Close").click()
-        page.get_by_role("link", name="User avatar").click()
+
+        page1 = context.new_page()
+        page1.goto(
+            "https://www.reddit.com/account/login/?experiment_d2x_safari_onetap=enabled&experiment_d2x_google_sso_gis_parity=enabled&experiment_d2x_am_modal_design_update=enabled&experiment_mweb_sso_login_link=enabled&shreddit=true&use_accountmanager=true")
+        page1.get_by_placeholder("\n        Username\n      ").click()
+        page1.get_by_placeholder("\n        Username\n      ").fill(accountDetails['username'])
+        page1.get_by_placeholder("\n        Password\n      ").click()
+        page1.get_by_placeholder("\n        Password\n      ").fill(accountDetails['password'])
+
+        page1.get_by_placeholder("\n        Password\n      ").press("Enter")
+        page1.get_by_placeholder("\n        Password\n      ").click()
+        page1.get_by_placeholder("\n        Password\n      ").press("Enter")
+        page1.wait_for_timeout(timeout=1000)
+        page1.close()
+        page.goto("https://www.reddit.com")
+
         print("Success!")
     else:
         print("Failed!")
@@ -34,19 +38,23 @@ def login(page):
 def screenshot(post, toScreenshot):
     with sync_playwright() as p:
         print("Taking Screenshot...")
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=False)
         context = browser.new_context()
+        context.set_default_timeout(300000)
         page = context.new_page()
+        page.set_default_timeout(300000)
         page.set_viewport_size({'width': 1920, 'height': 1080})
 
-        login(page)
+        login(page, context)
 
         page.goto("https://www.reddit.com/" + str(post.id))
 
         url = page.url
+        print(page.url)
         for i in range(0, len(toScreenshot)):
             print("Taking Screenshot ", i, "...", end="")
             page.goto(url + toScreenshot[i].id)
+            print(url + toScreenshot[i].id)
             if i == 0:
                 page.locator('[data-test-id="post-content"]').screenshot(path='images/0.png')
                 page.goto(url + toScreenshot[i].id)
