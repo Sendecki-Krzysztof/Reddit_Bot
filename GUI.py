@@ -85,7 +85,7 @@ MainMenu = [
     [sg.Text('Account Status:', key="Account"), sg.Button("Create Account json")],
     [sg.Text('Video Length (in seconds):'), sg.InputText(size=(15, 1)), sg.Text('default: 45s')],
     [sg.Text('Video Subreddit:'), sg.InputText(size=(15, 1)), sg.Text('default: "AskReddit"'),
-     sg.Checkbox("NSFW", default=False, key='nsfw')],
+     sg.Checkbox("allow NSFW", default=False, key='nsfw')],
     [sg.Text('Number of Videos:'), sg.InputText(size=(15, 1)), sg.Text('default: 1')],
     [sg.Text('Sorting Comments:'),
      sg.Radio("Best", "sortComments", default=True, key='best'),
