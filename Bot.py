@@ -1,3 +1,4 @@
+import random
 from os.path import isfile
 from pathlib import Path
 from praw.models import MoreComments
@@ -38,7 +39,7 @@ def login(page, context):
 def screenshot(post, toScreenshot):
     with sync_playwright() as p:
         print("Taking Screenshot...")
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         context = browser.new_context()
         context.set_default_timeout(300000)
         page = context.new_page()
@@ -154,16 +155,16 @@ def getVideoClips(screenshotsToTake, audioList, finalVideoLength, comments):
             includedClips += 1
             print("Done!")
         else:
-            print(currentLength)
-            if currentLength > finalVideoLength:  # if the video is over final length remove the last clip.
+            if currentLength > finalVideoLength + 15:  # if the video is over final length remove the last clip.
 
                 lastAudio = audioList.pop()
                 lastScreenshot = screenshotsToTake.pop()
                 currentLength = currentLength - lastAudio.duration
                 includedClips = includedClips - 1
+                break
 
-        print("Final video will be", currentLength, "seconds Long and have", includedClips - 1, "Clips!")
-        break
+    print("Final video will be", currentLength, "seconds Long and have", includedClips - 1, "Clips!")
+    return currentLength
 
 
 def generateClips(clips, audioList):
@@ -177,15 +178,27 @@ def generateClips(clips, audioList):
         print("Done!")
 
 
-def createFinalVideo(clips, sounds, name, height=1080, width=1920):
+def createFinalVideo(clips, sounds, name, length, height=1080, width=1920):
     imageConcat = concatenate_videoclips(clips).set_position(("center", "center"))
     audioComposite = CompositeAudioClip([concatenate_audioclips(sounds)])
     imageConcat.resize(width=width, height=height)
-    background = ImageClip("Background.png").set_position("center")
+    # background = ImageClip("Background.png").set_position("center")
+
+    background = createBackgroundClip(length)
 
     final = CompositeVideoClip([background, imageConcat])
     final = final.set_duration(audioComposite.duration)
     final.write_videofile(name, fps=30)
+
+
+def createBackgroundClip(length):
+    backgroundClip = VideoFileClip("Subway Surfers.mp4")
+    duration = backgroundClip.duration
+    print(duration, length)
+    randomStart = random.randint(0, int(duration - length))
+    backgroundClip = backgroundClip.subclip(0, randomStart)
+
+    return backgroundClip.set_position("center").without_audio()
 
 
 def createVideo(finalVideoLength, chosenSubreddit, videoNum, commentSortOrder, subredditSortOrder):
@@ -204,13 +217,14 @@ def createVideo(finalVideoLength, chosenSubreddit, videoNum, commentSortOrder, s
         getComments(post, comments, commentSortOrder)
 
         screenshotsToTake.append(post)
-        getVideoClips(screenshotsToTake, audioList, finalVideoLength, comments)
+        currentLength = getVideoClips(screenshotsToTake, audioList, finalVideoLength, comments)
+        print(currentLength)
 
         screenshot(post, screenshotsToTake)
 
         generateClips(clips, audioList)
         name = "Video" + str(i) + ".mp4"
-        createFinalVideo(clips, audioList, name)
+        createFinalVideo(clips, audioList, name, currentLength)
         print(name, "has been created!")
 
     print("All Videos Made!!!")
