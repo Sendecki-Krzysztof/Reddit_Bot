@@ -196,12 +196,12 @@ def createBackgroundClip(length):
     duration = backgroundClip.duration
     print(duration, length)
     randomStart = random.randint(0, int(duration - length))
-    backgroundClip = backgroundClip.subclip(0, randomStart)
+    backgroundClip = backgroundClip.subclip(randomStart, duration)
 
     return backgroundClip.set_position("center").without_audio()
 
 
-def createVideo(finalVideoLength, chosenSubreddit, videoNum, commentSortOrder, subredditSortOrder):
+def createVideo(finalVideoLength, chosenSubreddit, videoNum, commentSortOrder, subredditSortOrder, isNSFW):
     CheckDirectories()
     bot = createBot()
     subreddit = bot.subreddit(chosenSubreddit)

@@ -84,7 +84,8 @@ MainMenu = [
     [sg.Text('Bot Status:', key="Bot"), sg.Button("Create Bot json")],
     [sg.Text('Account Status:', key="Account"), sg.Button("Create Account json")],
     [sg.Text('Video Length (in seconds):'), sg.InputText(size=(15, 1)), sg.Text('default: 45s')],
-    [sg.Text('Video Subreddit:'), sg.InputText(size=(15, 1)), sg.Text('default: "AskReddit"')],
+    [sg.Text('Video Subreddit:'), sg.InputText(size=(15, 1)), sg.Text('default: "AskReddit"'),
+     sg.Checkbox("NSFW", default=False, key='nsfw')],
     [sg.Text('Number of Videos:'), sg.InputText(size=(15, 1)), sg.Text('default: 1')],
     [sg.Text('Sorting Comments:'),
      sg.Radio("Best", "sortComments", default=True, key='best'),
@@ -117,10 +118,18 @@ def handleVideoCreation(values):
         videoNumber = int(values[2])
 
     # Decide which value to sort by.
+    NSFWfound = False
     commentSortFound = False
     subSortFound = False
     for value in values:
-        if values[value] and not commentSortFound:
+        if values[value] and not NSFWfound:
+            if str(value).lower() == 'nsfw':
+                isNSFW = True
+            else:
+                isNSFW = False
+            NSFWfound = True
+            print(isNSFW)
+        elif values[value] and not commentSortFound:
             commentSort = str(value).lower()
             commentSortFound = True
         elif values[value] and not subSortFound:
@@ -128,7 +137,7 @@ def handleVideoCreation(values):
             commentSortFound = True
 
 
-    Bot.createVideo(videoLength, subreddit, videoNumber, commentSort, subredditSort)
+    Bot.createVideo(videoLength, subreddit, videoNumber, commentSort, subredditSort, isNSFW)
 
 
 mainMenu = sg.Window('Reddit Video Maker', MainMenu, finalize=True)
