@@ -115,6 +115,8 @@ def getPost(subreddit, subredditSort, isNSFW, VideoNumToFind=1):
     print("Getting Post...", end="")
     currentPost = 0
     for post in sortPosts(subreddit, subredditSort):
+        if post.stickied:
+            continue
         if not checkingNSFW:
             print("Not Checking")
             print(currentPost, VideoNumToFind)

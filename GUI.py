@@ -85,7 +85,7 @@ MainMenu = [
     [sg.Text('Account Status:', key="Account"), sg.Button("Create Account json")],
     [sg.Text('Video Length (in seconds):'), sg.InputText(size=(15, 1)), sg.Text('default: 45s')],
     [sg.Text('Video Subreddit:'), sg.InputText(size=(15, 1)), sg.Text('default: "AskReddit"'),
-     sg.Checkbox("allow NSFW", default=False, key='nsfw')],
+     sg.Checkbox("allow 'NSFW'", default=False, key='nsfw')],
     [sg.Text('Number of Videos:'), sg.InputText(size=(15, 1)), sg.Text('default: 1')],
     [sg.Text('Sorting Comments:'),
      sg.Radio("Best", "sortComments", default=True, key='best'),
@@ -109,7 +109,7 @@ def handleVideoCreation(values):
     videoNumber = 1
     commentSort = "best"
     subredditSort = "top"
-    print(values[0], values[1], values[2])
+    isNSFW = False
     if not values[0] == '':
         videoLength = int(values[0])
     if not values[1] == '':
@@ -118,22 +118,16 @@ def handleVideoCreation(values):
         videoNumber = int(values[2])
 
     # Decide which value to sort by.
-    NSFWfound = False
-    isNSFW = False
     commentSortFound = False
     subSortFound = False
     for value in values:
-        if values["nsfw"] and not NSFWfound:
+        if values["nsfw"]:
             isNSFW = True
-            NSFWfound = True
-            print(isNSFW)
         elif values[value] and not commentSortFound:
             commentSort = str(value).lower()
-            print(commentSort)
             commentSortFound = True
         elif values[value] and not subSortFound:
             subredditSort = str(value).lower()
-            print(subredditSort)
             commentSortFound = True
 
 
