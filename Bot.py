@@ -8,6 +8,7 @@ from moviepy.editor import *
 import praw
 import json
 
+listTest = ["dsa", "dsad"]
 
 def login(page, context):
     print("Logging into Reddit Account...", end="")

@@ -7,6 +7,7 @@ sg.theme('SandyBeach')
 appOpen = True
 
 
+
 # creates the Layout for the Json Reddit account create Window
 def jsonAccountLayout():
     redditAccountCreate = [
