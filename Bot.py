@@ -108,14 +108,30 @@ def sortPosts(subreddit, subredditSort):
 
 # Takes the User defined subreddit and a sort order, calls sortPosts to sort the posts in the requested sort order and
 # then returns the post defined by VideoNumToFind value (if VideoNumToFind=1, then returns the first post ect.)
-def getPost(subreddit, subredditSort, VideoNumToFind=1):
+def getPost(subreddit, subredditSort, isNSFW, VideoNumToFind=1):
+    checkingNSFW = False
+    if not isNSFW:
+        checkingNSFW = True
     print("Getting Post...", end="")
     currentPost = 0
     for post in sortPosts(subreddit, subredditSort):
-        print(currentPost, VideoNumToFind)
-        if currentPost == VideoNumToFind:
-            return post
-        currentPost += 1
+        if not checkingNSFW:
+            print("Not Checking")
+            print(currentPost, VideoNumToFind)
+            if currentPost == VideoNumToFind:
+                return post
+            currentPost += 1
+        else:
+            print("Checking")
+            if post.over_18:
+                print("NSFW")
+                continue
+            else:
+                print("SFW")
+                print(currentPost, VideoNumToFind)
+                if currentPost == VideoNumToFind:
+                    return post
+                currentPost += 1
 
 
 # Takes a post object and an empty commentList to fill with comments. Add comments to this list if they
@@ -202,6 +218,7 @@ def createBackgroundClip(length):
 
 
 def createVideo(finalVideoLength, chosenSubreddit, videoNum, commentSortOrder, subredditSortOrder, isNSFW):
+    print(commentSortOrder, subredditSortOrder, isNSFW)
     CheckDirectories()
     bot = createBot()
     subreddit = bot.subreddit(chosenSubreddit)
@@ -213,7 +230,7 @@ def createVideo(finalVideoLength, chosenSubreddit, videoNum, commentSortOrder, s
         clips = []
         comments = []
 
-        post = getPost(subreddit, subredditSortOrder, i)
+        post = getPost(subreddit, subredditSortOrder, isNSFW, i)
         getComments(post, comments, commentSortOrder)
 
         screenshotsToTake.append(post)

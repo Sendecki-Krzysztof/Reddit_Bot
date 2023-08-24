@@ -119,21 +119,21 @@ def handleVideoCreation(values):
 
     # Decide which value to sort by.
     NSFWfound = False
+    isNSFW = False
     commentSortFound = False
     subSortFound = False
     for value in values:
-        if values[value] and not NSFWfound:
-            if str(value).lower() == 'nsfw':
-                isNSFW = True
-            else:
-                isNSFW = False
+        if values["nsfw"] and not NSFWfound:
+            isNSFW = True
             NSFWfound = True
             print(isNSFW)
         elif values[value] and not commentSortFound:
             commentSort = str(value).lower()
+            print(commentSort)
             commentSortFound = True
         elif values[value] and not subSortFound:
             subredditSort = str(value).lower()
+            print(subredditSort)
             commentSortFound = True
 
 
