@@ -145,6 +145,8 @@ def getComments(post, commentList, sortOrder="best", minWordCount=20):
     for comment in post.comments:
         if isinstance(comment, MoreComments):
             continue
+        if comment.stickied:
+            continue
         if comment.body in ["[removed]", "[deleted]"]:
             continue
         if len(comment.body) > minWordCount:
@@ -162,6 +164,13 @@ def getVideoClips(screenshotsToTake, audioList, finalVideoLength, comments):
     audioList.append(AudioFileClip("./audio/0.mp3"))
     currentLength = audioList[0].duration
     includedClips = 1
+    if screenshotsToTake[0].selftext != '':
+        postBodyMP3 = gTTS(text=screenshotsToTake[0].selftext, lang='en')
+        postBodyMP3.save('./audio/1.mp3')
+        audioList.append(AudioFileClip("./audio/1.mp3"))
+        currentLength = audioList[1].duration
+        includedClips = 2
+
     for comment in comments:
         if currentLength < finalVideoLength:
             print("Finding Clip ", includedClips, "...", end="")
@@ -234,7 +243,10 @@ def createVideo(finalVideoLength, chosenSubreddit, videoNum, commentSortOrder, s
         comments = []
 
         post = getPost(subreddit, subredditSortOrder, isNSFW, i)
+
         getComments(post, comments, commentSortOrder)
+        print(post)
+        print(comments[0])
 
         screenshotsToTake.append(post)
         currentLength = getVideoClips(screenshotsToTake, audioList, finalVideoLength, comments)
